@@ -1223,8 +1223,9 @@ document.getElementById('open-btn').addEventListener('click', function () {
   var cover = document.getElementById('cover');
   var main  = document.getElementById('main');
 
-  // Mulai musik
-  document.getElementById('bg-music').play();
+
+// Mulai musik
+playMusic();
 
   cover.style.transition = 'opacity .6s ease';
   cover.style.opacity = '0';
@@ -1348,6 +1349,7 @@ function showCopied(btn) {
 }
 
 /* ── Music toggle ─────────────────────────────────────── */
+/* ── Music toggle ─────────────────────────────────────── */
 const music = document.getElementById("bg-music");
 const musicBtn = document.getElementById("music-btn");
 const playIcon = document.getElementById("music-play-icon");
@@ -1360,16 +1362,35 @@ function updateMusicIcon() {
     pauseIcon.style.display = musicPlaying ? "block" : "none";
 }
 
+function playMusic() {
+    music.play()
+        .then(function () {
+            musicPlaying = true;
+            updateMusicIcon();
+        })
+        .catch(function (error) {
+            console.log("Musik gagal diputar:", error);
+            musicPlaying = false;
+            updateMusicIcon();
+        });
+}
+
+music.addEventListener("play", function () {
+    musicPlaying = true;
+    updateMusicIcon();
+});
+
+music.addEventListener("pause", function () {
+    musicPlaying = false;
+    updateMusicIcon();
+});
+
 musicBtn.addEventListener("click", function () {
     if (music.paused) {
-        music.play();
-        musicPlaying = true;
+        playMusic();
     } else {
         music.pause();
-        musicPlaying = false;
     }
-
-    updateMusicIcon();
 });
 
 /* ── Mobile timeline: show all items as single-column ─── */
