@@ -1,0 +1,10 @@
+{
+  "description": "An elegant, responsive wedding invitation website showcasing event details, RSVP, photo gallery, and countdown timer with a romantic blue theme.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
