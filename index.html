@@ -1223,6 +1223,15 @@ Dan setelah semua perjalanan itu, kami kembali memilih satu sama lain—untuk me
 <!-- ════════════════════════════════════════════════════════ -->
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+const SUPABASE_URL = "https://rdlreudwwgvofqyeykrv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_2g_QAmb9ro3IWynUsDf3KA_PAltzA83";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
   /* ── Music toggle ─────────────────────────────────────── */
 
 var music = document.getElementById("bg-music");
@@ -1371,7 +1380,7 @@ document.querySelectorAll('.gallery-item').forEach(function (item) {
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   });
-});a
+});
 document.getElementById('lightbox').addEventListener('click', closeLightbox);
 document.getElementById('lb-close').addEventListener('click', function (e) {
   e.stopPropagation(); closeLightbox();
