@@ -593,7 +593,13 @@ footer {
 /*  RESPONSIVE                                                          */
 /* ════════════════════════════════════════════════════════════════════ */
 @media (max-width: 680px) {
-  .section { padding: 64px 0; }
+  .section {
+    padding: 64px 0;
+  }
+
+  .timeline {
+    width: 100%;
+  }
 
   .timeline::before {
     left: 20px;
@@ -601,24 +607,17 @@ footer {
 
   .tl-item {
     display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 0;
+    grid-template-columns: 40px minmax(0, 1fr);
     margin-bottom: 44px;
     align-items: start;
   }
 
-  .tl-left {
-    display: block;
-    grid-column: 2;
-    padding-left: 20px;
-    padding-right: 0;
-    text-align: left;
-  }
-
+  .tl-left,
   .tl-right {
     display: block;
     grid-column: 2;
-    padding-left: 20px;
+    grid-row: 1;
+    padding: 0 0 0 20px;
     text-align: left;
   }
 
@@ -633,12 +632,8 @@ footer {
     display: none;
   }
 
-  .tl-item[data-pos="right"] .tl-right {
-    grid-column: 2;
-  }
-
   .gallery-grid {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 160px;
   }
 
@@ -647,7 +642,7 @@ footer {
   }
 
   .cover-name {
-    font-size: clamp(62px,18vw,80px);
+    font-size: clamp(62px, 18vw, 80px);
   }
 
   .event-card {
