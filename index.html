@@ -1216,6 +1216,7 @@ footer {
 </button>
 
 <!-- ════════════════════════════════════════════════════════ -->
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ── Open invitation ──────────────────────────────────── */
 document.getElementById('open-btn').addEventListener('click', function () {
@@ -1269,11 +1270,43 @@ function initObserver() {
 }
 
 /* ── RSVP ─────────────────────────────────────────────── */
-document.getElementById('rsvp-form').addEventListener('submit', function (e) {
+/* ── RSVP ─────────────────────────────────────────────── */
+document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
   e.preventDefault();
+
+  var form = document.getElementById('rsvp-form');
   var name = document.getElementById('rsvp-name').value.trim();
-  if (!name) { document.getElementById('rsvp-name').focus(); return; }
-  document.getElementById('rsvp-form').classList.add('hide');
+  var attend = document.getElementById('rsvp-attend').value;
+  var message = document.getElementById('rsvp-msg').value.trim();
+
+  if (!name) {
+    document.getElementById('rsvp-name').focus();
+    return;
+  }
+
+  var button = form.querySelector('button[type="submit"]');
+  button.disabled = true;
+  button.querySelector('span').textContent = 'Mengirim...';
+
+  const { error } = await supabaseClient
+    .from('rsvp')
+    .insert({
+      nama: name,
+      kehadiran: attend,
+      ucapan: message
+    });
+
+  if (error) {
+    console.error('Gagal menyimpan RSVP:', error);
+
+    alert('RSVP gagal dikirim. Silakan coba lagi.');
+
+    button.disabled = false;
+    button.querySelector('span').textContent = 'Kirim Konfirmasi';
+    return;
+  }
+
+  form.classList.add('hide');
   document.getElementById('rsvp-success').classList.add('show');
 });
 
@@ -1414,6 +1447,16 @@ function fixMobileTimeline() {
 }
 fixMobileTimeline();
 window.addEventListener('resize', fixMobileTimeline);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+const SUPABASE_URL = "https://rdlreudwgvqfoyqekrv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_2RtwlShmY6m_FsPFqTSowQ_ucJ12gWh";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
 </script>
 </body>
 </html>
