@@ -1222,6 +1222,50 @@ footer {
 <!-- ════════════════════════════════════════════════════════ -->
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  /* ── Music toggle ─────────────────────────────────────── */
+
+const music = document.getElementById("bg-music");
+const musicBtn = document.getElementById("music-btn");
+const playIcon = document.getElementById("music-play-icon");
+const pauseIcon = document.getElementById("music-pause-icon");
+
+let musicPlaying = false;
+
+function updateMusicIcon() {
+    playIcon.style.display = musicPlaying ? "none" : "block";
+    pauseIcon.style.display = musicPlaying ? "block" : "none";
+}
+
+function playMusic() {
+    music.play()
+        .then(function () {
+            musicPlaying = true;
+            updateMusicIcon();
+        })
+        .catch(function (error) {
+            console.log("Musik gagal diputar:", error);
+            musicPlaying = false;
+            updateMusicIcon();
+        });
+}
+
+music.addEventListener("play", function () {
+    musicPlaying = true;
+    updateMusicIcon();
+});
+
+music.addEventListener("pause", function () {
+    musicPlaying = false;
+    updateMusicIcon();
+});
+
+musicBtn.addEventListener("click", function () {
+    if (music.paused) {
+        playMusic();
+    } else {
+        music.pause();
+    }
+});
 /* ── Open invitation ──────────────────────────────────── */
 document.getElementById('open-btn').addEventListener('click', function () {
 
@@ -1315,66 +1359,6 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
 });
 
 /* ── Wishes ───────────────────────────────────────────── */
-/* ── Wishes ───────────────────────────────────────────── */
-/* ── Wishes ───────────────────────────────────────────── */
-document.getElementById('submit-wish').addEventListener('click', async function () {
-
-  var name = document.getElementById('wish-name').value.trim();
-  var msg  = document.getElementById('wish-message').value.trim();
-  var button = document.getElementById('submit-wish');
-
-  if (!name || !msg) {
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = 'Mengirim...';
-
-  const { error } = await supabaseClient
-    .from('rsvp')
-    .insert({
-      nama: name,
-      kehadiran: 'mungkin',
-      ucapan: msg
-    });
-
-  if (error) {
-    console.error('Gagal menyimpan ucapan:', error);
-
-    alert('Ucapan gagal dikirim. Silakan coba lagi.');
-
-    button.disabled = false;
-    button.textContent = 'Kirim Ucapan';
-    return;
-  }
-
-  var now = new Date();
-
-  var date = now.getDate() + ' ' +
-    ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
-     'September','Oktober','November','Desember'][now.getMonth()] +
-    ' ' + now.getFullYear();
-
-  var card = document.createElement('div');
-  card.className = 'wish-card';
-
-  card.innerHTML =
-    '<div class="wish-header">' +
-      '<span class="wish-name serif">' + escHtml(name) + '</span>' +
-      '<span class="wish-date">' + date + '</span>' +
-    '</div>' +
-    '<p class="wish-msg">' + escHtml(msg) + '</p>';
-
-  var list = document.getElementById('wish-list');
-  list.insertBefore(card, list.firstChild);
-
-  document.getElementById('wish-name').value = '';
-  document.getElementById('wish-message').value = '';
-
-  button.disabled = false;
-  button.textContent = 'Kirim Ucapan';
-});
-
 function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1417,51 +1401,6 @@ function showCopied(btn) {
   btn.classList.add('copied');
   setTimeout(function () { btn.textContent = 'Salin Nomor'; btn.classList.remove('copied'); }, 2100);
 }
-
-/* ── Music toggle ─────────────────────────────────────── */
-/* ── Music toggle ─────────────────────────────────────── */
-const music = document.getElementById("bg-music");
-const musicBtn = document.getElementById("music-btn");
-const playIcon = document.getElementById("music-play-icon");
-const pauseIcon = document.getElementById("music-pause-icon");
-
-let musicPlaying = false;
-
-function updateMusicIcon() {
-    playIcon.style.display = musicPlaying ? "none" : "block";
-    pauseIcon.style.display = musicPlaying ? "block" : "none";
-}
-
-function playMusic() {
-    music.play()
-        .then(function () {
-            musicPlaying = true;
-            updateMusicIcon();
-        })
-        .catch(function (error) {
-            console.log("Musik gagal diputar:", error);
-            musicPlaying = false;
-            updateMusicIcon();
-        });
-}
-
-music.addEventListener("play", function () {
-    musicPlaying = true;
-    updateMusicIcon();
-});
-
-music.addEventListener("pause", function () {
-    musicPlaying = false;
-    updateMusicIcon();
-});
-
-musicBtn.addEventListener("click", function () {
-    if (music.paused) {
-        playMusic();
-    } else {
-        music.pause();
-    }
-});
 
 /* ── Mobile timeline: show all items as single-column ─── */
 
