@@ -1135,27 +1135,7 @@ footer {
       </div>
 
       <div class="wish-list" id="wish-list">
-        <div class="wish-card">
-          <div class="wish-header">
-            <span class="wish-name serif">Nama</span>
-            <span class="wish-date">8 September 2026</span>
-          </div>
-          <p class="wish-msg">Semoga pernikahan kalian dipenuhi kebahagiaan dan keberkahan selamanya. Langgeng ya! 💙</p>
-        </div>
-        <div class="wish-card">
-          <div class="wish-header">
-            <span class="wish-name serif">Nama</span>
-            <span class="wish-date">9 September 2026</span>
-          </div>
-          <p class="wish-msg">Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah.</p>
-        </div>
-        <div class="wish-card">
-          <div class="wish-header">
-            <span class="wish-name serif">Nama</span>
-            <span class="wish-date">10 September 2026</span>
-          </div>
-          <p class="wish-msg">Bahagia sekali mendengar kabar ini! Wish you both a lifetime of love and happiness.</p>
-        </div>
+
       </div>
     </div>
   </section>
@@ -1348,12 +1328,41 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
 });
 
 /* ── Wishes ───────────────────────────────────────────── */
-document.getElementById('submit-wish').addEventListener('click', function () {
+/* ── Wishes ───────────────────────────────────────────── */
+/* ── Wishes ───────────────────────────────────────────── */
+document.getElementById('submit-wish').addEventListener('click', async function () {
+
   var name = document.getElementById('wish-name').value.trim();
   var msg  = document.getElementById('wish-message').value.trim();
-  if (!name || !msg) { return; }
+  var button = document.getElementById('submit-wish');
 
-  var now  = new Date();
+  if (!name || !msg) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Mengirim...';
+
+  const { error } = await supabaseClient
+    .from('rsvp')
+    .insert({
+      nama: name,
+      kehadiran: 'mungkin',
+      ucapan: msg
+    });
+
+  if (error) {
+    console.error('Gagal menyimpan ucapan:', error);
+
+    alert('Ucapan gagal dikirim. Silakan coba lagi.');
+
+    button.disabled = false;
+    button.textContent = 'Kirim Ucapan';
+    return;
+  }
+
+  var now = new Date();
+
   var date = now.getDate() + ' ' +
     ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
      'September','Oktober','November','Desember'][now.getMonth()] +
@@ -1361,6 +1370,7 @@ document.getElementById('submit-wish').addEventListener('click', function () {
 
   var card = document.createElement('div');
   card.className = 'wish-card';
+
   card.innerHTML =
     '<div class="wish-header">' +
       '<span class="wish-name serif">' + escHtml(name) + '</span>' +
@@ -1373,6 +1383,9 @@ document.getElementById('submit-wish').addEventListener('click', function () {
 
   document.getElementById('wish-name').value = '';
   document.getElementById('wish-message').value = '';
+
+  button.disabled = false;
+  button.textContent = 'Kirim Ucapan';
 });
 
 function escHtml(str) {
@@ -1467,12 +1480,56 @@ musicBtn.addEventListener("click", function () {
 
 
 const SUPABASE_URL = "https://rdlreudwwgvofqyeykrv.supabase.co";
-const SUPABASE_KEY = "sb_publishable_2RtwlShmY6m_FsPFqTSowQ_ucJ12gWh";
+const SUPABASE_KEY = "sb_publishable_...";
 
 const supabaseClient = supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+
+
+/* ── Load Wishes ───────────────────────────────────────── */
+async function loadWishes() {
+
+  const { data, error } = await supabaseClient
+    .from('rsvp')
+    .select('nama, ucapan, created_at')
+    .not('ucapan', 'is', null)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Gagal mengambil ucapan:', error);
+    return;
+  }
+
+  var list = document.getElementById('wish-list');
+
+  list.innerHTML = '';
+
+  data.forEach(function (wish) {
+
+    var date = new Date(wish.created_at);
+
+    var formattedDate = date.getDate() + ' ' +
+      ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
+       'September','Oktober','November','Desember'][date.getMonth()] +
+      ' ' + date.getFullYear();
+
+    var card = document.createElement('div');
+    card.className = 'wish-card';
+
+    card.innerHTML =
+      '<div class="wish-header">' +
+        '<span class="wish-name serif">' + escHtml(wish.nama) + '</span>' +
+        '<span class="wish-date">' + formattedDate + '</span>' +
+      '</div>' +
+      '<p class="wish-msg">' + escHtml(wish.ucapan) + '</p>';
+
+    list.appendChild(card);
+  });
+}
+
+loadWishes();
 
 </script>
 </body>
