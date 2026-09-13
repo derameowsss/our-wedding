@@ -1224,12 +1224,12 @@ footer {
 <script>
   /* ── Music toggle ─────────────────────────────────────── */
 
-const music = document.getElementById("bg-music");
-const musicBtn = document.getElementById("music-btn");
-const playIcon = document.getElementById("music-play-icon");
-const pauseIcon = document.getElementById("music-pause-icon");
+var music = document.getElementById("bg-music");
+var musicBtn = document.getElementById("music-btn");
+var playIcon = document.getElementById("music-play-icon");
+var pauseIcon = document.getElementById("music-pause-icon");
 
-let musicPlaying = false;
+var musicPlaying = false;
 
 function updateMusicIcon() {
     playIcon.style.display = musicPlaying ? "none" : "block";
@@ -1321,7 +1321,6 @@ function initObserver() {
 /* ── RSVP ─────────────────────────────────────────────── */
 document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
   e.preventDefault();
-
   var form = document.getElementById('rsvp-form');
   var name = document.getElementById('rsvp-name').value.trim();
   var attend = document.getElementById('rsvp-attend').value;
@@ -1357,12 +1356,10 @@ document.getElementById('rsvp-form').addEventListener('submit', async function (
   form.classList.add('hide');
   document.getElementById('rsvp-success').classList.add('show');
 });
-
 /* ── Wishes ───────────────────────────────────────────── */
 function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
 /* ── Gallery lightbox ─────────────────────────────────── */
 document.querySelectorAll('.gallery-item').forEach(function (item) {
   item.addEventListener('click', function () {
@@ -1371,7 +1368,7 @@ document.querySelectorAll('.gallery-item').forEach(function (item) {
     document.getElementById('lightbox').classList.add('open');
     document.body.style.overflow = 'hidden';
   });
-});
+});a
 document.getElementById('lightbox').addEventListener('click', closeLightbox);
 document.getElementById('lb-close').addEventListener('click', function (e) {
   e.stopPropagation(); closeLightbox();
