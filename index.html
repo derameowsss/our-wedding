@@ -1232,42 +1232,30 @@ const supabaseClient = supabase.createClient(
     SUPABASE_KEY
 );
 
-  /* ── Music toggle ─────────────────────────────────────── */
+/* ── Music ───────────────────────────── */
 
 var music = document.getElementById("bg-music");
 var musicBtn = document.getElementById("music-btn");
 var playIcon = document.getElementById("music-play-icon");
 var pauseIcon = document.getElementById("music-pause-icon");
 
-var musicPlaying = false;
-
 function updateMusicIcon() {
-    playIcon.style.display = musicPlaying ? "none" : "block";
-    pauseIcon.style.display = musicPlaying ? "block" : "none";
+    playIcon.style.display = music.paused ? "block" : "none";
+    pauseIcon.style.display = music.paused ? "none" : "block";
 }
 
 function playMusic() {
     music.play()
         .then(function () {
-            musicPlaying = true;
             updateMusicIcon();
         })
         .catch(function (error) {
             console.log("Musik gagal diputar:", error);
-            musicPlaying = false;
-            updateMusicIcon();
         });
 }
 
-music.addEventListener("play", function () {
-    musicPlaying = true;
-    updateMusicIcon();
-});
-
-music.addEventListener("pause", function () {
-    musicPlaying = false;
-    updateMusicIcon();
-});
+music.addEventListener("play", updateMusicIcon);
+music.addEventListener("pause", updateMusicIcon);
 
 musicBtn.addEventListener("click", function () {
     if (music.paused) {
@@ -1277,34 +1265,33 @@ musicBtn.addEventListener("click", function () {
     }
 });
 
+/* ── Open invitation ───────────────── */
 
-/* ── Open invitation ──────────────────────────────────── */
-document.getElementById('open-btn').addEventListener('click', function () {
+document.getElementById("open-btn").addEventListener("click", function () {
 
-  var cover = document.getElementById('cover');
-  var main  = document.getElementById('main');
+    var cover = document.getElementById("cover");
+    var main = document.getElementById("main");
 
+    // Mulai musik
+    playMusic();
 
-// Mulai musik
-playMusic();
+    // Animasi cover
+    cover.style.transition = "opacity 0.6s ease";
+    cover.style.opacity = "0";
 
-  cover.style.transition = 'opacity .6s ease';
-  cover.style.opacity = '0';
+    setTimeout(function () {
 
-  setTimeout(function () {
+        cover.style.display = "none";
+        main.style.display = "block";
 
-    cover.style.display = 'none';
-    main.style.display = 'block';
-    window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
 
-    document.getElementById('music-btn').classList.add('show');
+        musicBtn.classList.add("show");
 
-    initObserver();
+        initObserver();
 
-  }, 600);
-
+    }, 600);
 });
-
 /* ── Countdown ────────────────────────────────────────── */
 var WEDDING = new Date('2026-11-28T09:00:00');
 function pad(n) { return String(n).padStart(2, '0'); }
